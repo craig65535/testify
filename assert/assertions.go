@@ -1990,7 +1990,7 @@ func ErrorIs(t TestingT, err, target error, msgAndArgs ...interface{}) bool {
 		expectedText = target.Error()
 	}
 
-	chain := buildErrorChainString(err, false)
+	chain := buildErrorChainString(err)
 
 	return Fail(t, fmt.Sprintf("Target error should be in err chain:\n"+
 		"expected: %q\n"+
@@ -2013,7 +2013,7 @@ func NotErrorIs(t TestingT, err, target error, msgAndArgs ...interface{}) bool {
 		expectedText = target.Error()
 	}
 
-	chain := buildErrorChainString(err, false)
+	chain := buildErrorChainString(err)
 
 	return Fail(t, fmt.Sprintf("Target error should not be in err chain:\n"+
 		"found: %q\n"+
@@ -2031,7 +2031,7 @@ func ErrorAs(t TestingT, err error, target interface{}, msgAndArgs ...interface{
 		return true
 	}
 
-	chain := buildErrorChainString(err, true)
+	chain := buildErrorChainString(err)
 
 	return Fail(t, fmt.Sprintf("Should be in error chain:\n"+
 		"expected: %q\n"+
@@ -2060,7 +2060,7 @@ func unwrapAll(err error) (errs []error) {
 	}
 }
 
-func buildErrorChainString(err error, withType bool) string {
+func buildErrorChainString(err error) string {
 	if err == nil {
 		return ""
 	}
@@ -2072,9 +2072,6 @@ func buildErrorChainString(err error, withType bool) string {
 			chain += "\n\t"
 		}
 		chain += fmt.Sprintf("%q", errs[i].Error())
-		if withType {
-			chain += fmt.Sprintf(" (%T)", errs[i])
-		}
 	}
 	return chain
 }
